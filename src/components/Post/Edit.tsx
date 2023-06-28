@@ -1,52 +1,37 @@
-import React, {useState, useEffect, useCallback, useContext} from 'react';
-import { post } from '../api/api';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { post } from '../../api/api';
 import { FavoriteContext } from './Context';
 import Favorites from './Favorites';
-
+import { PostType } from '../../types/types';
 
 interface Post {
-  id: number;
-  title: string;
-}
-
-interface EditProps {
   Id: number;
   title: string;
-  posts: Post[];
-  setPosts: ([]) => void;
-  isFavorite: boolean
+  isFavorite:boolean
 }
 
-const Edit = ({
-  Id,
-  title,
-  posts,
-  setPosts,
-  isFavorite
-  
-}: EditProps) => {
+
+
+const Edit = ({ Id, title, isFavorite}:Post) => {
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [updatedPost, setUpdatedPost] = useState<Post>({
+
+  const [updatedPost, setUpdatedPost] = useState<PostType>({
     id: 0,
     title: '',
+    userId:0,
+    isFavorite:false
   });
-
-
- 
-
-
-
-  
+  const {posts, setPosts, error, setError } =useContext(FavoriteContext)
 
   const toggleEditing = (postId: number): void => {
     if (editingId === postId) {
       setEditingId(null);
-      setUpdatedPost({ id: 0, title: '' });
+      setUpdatedPost({ id: 0, title: '', userId:0, isFavorite:false });
     } else {
       const post = posts.find((p) => p.id === postId);
       if (post) {
         setEditingId(postId);
-        setUpdatedPost({ ...post });
+        setUpdatedPost({ ...post , userId:0, isFavorite:false});
       }
     }
   };
@@ -68,55 +53,44 @@ const Edit = ({
         );
         setPosts(updatedPosts);
         setEditingId(null);
-        setUpdatedPost({ id: 0, title: '' });
+        setUpdatedPost({ id: 0, title: '' ,userId:0, isFavorite:false});
       } catch (error) {
-        console.log(error);
+        setError(error as Error);
       }
     }
   };
- 
+
 
   const cancelChanges = useCallback((): void => {
     setEditingId(null);
-    setUpdatedPost({ id: 0, title: '' });
-  },[]);
- 
- 
-
-
-
-
-  return (
+    setUpdatedPost({ id: 0, title: '' ,userId:0, isFavorite:false});
+  }, []);
+   if (error?.message && editingId === Id){
+    return <span>He
+      re's the error: {error.message} </span>
+   }
   
-    <div>
-      {/* <FavoriteContext.Provider value={{Id, isFavorite, setIsFavorite}}> */}
-        {editingId === Id ? (
-          <>
-            <input
-              name='title'
-              value={updatedPost.title}
-              onChange={updatePost}
-            />
-            <button onClick={saveChanges}>Save</button>
-            <button onClick={cancelChanges}>Cancel</button>
-          </>
-        ) : (
-          <>
-<p className={isFavorite ? 'text-red-700' : 'text-neutral-700'}>{title}</p>
+  return (
+    <div >
+     
+      {editingId === Id ? (
+        <>
+          <input name='title' value={updatedPost.title} onChange={updatePost} />
+          <button onClick={saveChanges}>Save</button>
+          <button onClick={cancelChanges}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <p className={isFavorite ? 'text-red-700' : 'text-neutral-700'}>
+            {title}
+          </p>
 
-  <Favorites></Favorites>
           <button onClick={() => toggleEditing(Id)}>Edit</button>
         </>
       )}
-            
 
-         
-        
  
-            {/* </FavoriteContext.Provider> */}
     </div>
-
-
   );
 };
 
