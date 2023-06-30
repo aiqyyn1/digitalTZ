@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { post } from '../../api/api';
-import { PostContext } from './Context';
-
+import { AlbumsProvider } from './Context';
+import {Edit as EditButton} from 'tabler-icons-react'
 import { PostType } from '../../types/types';
-import { Edit as EditButton } from 'tabler-icons-react';
+
 interface Post {
   Id: number;
   title: string;
@@ -19,7 +19,8 @@ const Edit = ({ Id, title, isFavorite }: Post) => {
     userId: 0,
     isFavorite: false,
   });
-  const { posts, setPosts, error, setError } = useContext(PostContext);
+  const { posts, setPosts, error, setError, showImages, setShowImage } =
+    useContext(AlbumsProvider);
 
   const toggleEditing = (postId: number): void => {
     if (editingId === postId) {
@@ -42,10 +43,7 @@ const Edit = ({ Id, title, isFavorite }: Post) => {
   const saveChanges = async (): Promise<void> => {
     if (editingId && updatedPost.title.trim() !== '') {
       try {
-        await post.put(
-          `https://jsonplaceholder.typicode.com/posts/${editingId}`,
-          updatedPost
-        );
+        await post.put(`/albums/${editingId}`, updatedPost);
         const updatedPosts = posts.map((post) =>
           post.id === editingId ? updatedPost : post
         );
@@ -90,11 +88,17 @@ const Edit = ({ Id, title, isFavorite }: Post) => {
         </>
       ) : (
         <>
-          <p className={isFavorite ? 'text-red-700' : 'text-neutral-700'}>
+          <p
+            className={
+              isFavorite
+                ? 'text-red-700 cursor-pointer'
+                : 'text-neutral-700 cursor-pointer'
+            }
+            onClick={() => setShowImage(true)}>
             {title}
           </p>
-        <EditButton onClick={() => toggleEditing(Id)}></EditButton>
-         
+
+          <EditButton onClick={() => toggleEditing(Id)}></EditButton>
         </>
       )}
     </div>

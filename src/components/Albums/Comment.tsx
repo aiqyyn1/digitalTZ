@@ -1,5 +1,4 @@
-import React from 'react';
-import { post } from '../../api/api';
+import { albumsApi } from '../../api/api';
 import { useState } from 'react';
 import { MessageCircle2 } from 'tabler-icons-react';
 interface Comments {
@@ -16,7 +15,7 @@ const Comment = ({ Id }: any) => {
 
   const handleGetComments = async (postId: number): Promise<void> => {
     try {
-      const response = await post.get(`/${postId}/comments`);
+      const response = await albumsApi.get(`/${postId}/comments`);
 
       setComments(response.data);
       if (response.status === 200) {
@@ -29,7 +28,7 @@ const Comment = ({ Id }: any) => {
   };
   return (
     <div>
-     <MessageCircle2 onClick={()=>handleGetComments(Id)}></MessageCircle2>
+      <MessageCircle2 onClick={() => handleGetComments(Id)}></MessageCircle2>
       {toggleComments &&
         postId === Id &&
         comments.map((comment, index) => (

@@ -9,3 +9,9 @@ export const users = axios.create({
 export const albumsApi =axios.create({
   baseURL:'https://jsonplaceholder.typicode.com/albums'
 })
+export const photosApi= axios.create({
+  baseURL:'https://jsonplaceholder.typicode.com/photos'
+})
+export const todosApi=axios.create({
+  baseURL:"https://jsonplaceholder.typicode.com/todos"
+})

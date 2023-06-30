@@ -1,67 +1,42 @@
-import React, { useContext } from 'react';
-import { PostContext } from './Context';
-type FavoriteCheckBoxProps = {
-  showFavorite: boolean;
-  setShowFavorite: (a: boolean) => void;
+import { useContext } from 'react';
+import { AlbumsProvider } from './Context';
+
+type DeleteCheckBoxProps = {
+  showDelete: boolean;
+  setShowDelete: (a: boolean) => void;
 };
-const FavoriteModel = ({
-  showFavorite,
-  setShowFavorite,
-}: FavoriteCheckBoxProps) => {
-  const {
-    posts,
-    selectedPostIds,
-    favoriteIds,
-    setFavoriteIds,
-    setPosts,
-    setSelectedPostIds,
-  } = useContext(PostContext);
-  const handleToggleFavorite = () => {
-    const updatedPosts = posts.map((post) => {
-      if (selectedPostIds.includes(post.id)) {
-        const isFavorite = favoriteIds.includes(post.id);
-        return { ...post, isFavorite: !isFavorite };
-      }
-      return post;
-    });
-
-    const updatedFavoriteIds = updatedPosts.reduce(
-      (ids, post) => {
-        if (post.isFavorite) {
-          ids.push(post.id);
-        } else {
-          const index = ids.indexOf(post.id);
-          if (index !== -1) {
-            ids.splice(index, 1);
-          }
-        }
-        return ids;
-      },
-      [...favoriteIds]
+const DeleteCheckBoxModal = ({
+  showDelete,
+  setShowDelete,
+}: DeleteCheckBoxProps) => {
+  const { posts, selectedPostIds, setPosts, setSelectedPostIds } =
+    useContext(AlbumsProvider);
+  const handleDeletePosts = () => {
+    const updatedPosts = posts.filter(
+      (post) => !selectedPostIds.includes(post.id)
     );
-
-    setFavoriteIds(updatedFavoriteIds);
-    localStorage.setItem('favoriteIds', JSON.stringify(updatedFavoriteIds));
-
     setPosts(updatedPosts);
+
+    setShowDelete(true);
     setSelectedPostIds([]);
   };
-  const handleConfirmFavorite = () => {
-    handleToggleFavorite();
-    setShowFavorite(false);
+
+  const handleConfirmDelete = () => {
+    handleDeletePosts();
+    setShowDelete(false);
   };
 
   return (
     <>
-      {showFavorite ? (
+      {showDelete ? (
         <div className='justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
           <div className='relative  my-6 mx-auto w-[300px]'>
             <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
               <div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
-                <h3 className='text-3xl font-semibold'>Favorite Title</h3>
+                <h3 className='text-3xl font-semibold'>Delete Title</h3>
                 <button
                   className='p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
-                  onClick={() => setShowFavorite(false)}>
+                  onClick={() => setShowDelete(false)}>
                   <span className='bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none'>
                     ×
                   </span>
@@ -70,7 +45,7 @@ const FavoriteModel = ({
 
               <div className='relative p-6 flex-auto '>
                 <p className='my-4 text-slate-500 text-lg leading-relaxed'>
-                  Are you sure you want to Favorite it?
+                  Are you sure you want to delete?
                 </p>
               </div>
 
@@ -78,13 +53,13 @@ const FavoriteModel = ({
                 <button
                   className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
                   type='button'
-                  onClick={() => setShowFavorite(false)}>
+                  onClick={() => setShowDelete(false)}>
                   NO
                 </button>
                 <button
                   className='bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
                   type='button'
-                  onClick={handleConfirmFavorite}>
+                  onClick={handleConfirmDelete}>
                   YES
                 </button>
               </div>
@@ -98,4 +73,4 @@ const FavoriteModel = ({
   );
 };
 
-export default FavoriteModel;
+export default DeleteCheckBoxModal;

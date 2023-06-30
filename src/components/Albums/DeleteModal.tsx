@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { MyContext } from './Context';
-import { post } from '../../api/api';
 
 const DeleteModal = () => {
   const { showModal, setShowModal, Id, setPosts, handleDeletePost } =

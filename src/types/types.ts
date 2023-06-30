@@ -9,3 +9,15 @@ export interface UserType {
   id: number;
   name: string;
 }
+export interface PhotoType{
+  id:number,
+  url:string
+  thumbnailUrl:string
+  title:string
+
+}
+export interface TodosType{
+  id:number,
+  title:string
+  completed:boolean
+}

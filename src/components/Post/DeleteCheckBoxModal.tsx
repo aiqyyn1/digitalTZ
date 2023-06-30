@@ -1,24 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { FavoriteContext, MyContext } from './Context';
-import { post } from '../../api/api';
-type DeleteCheckBoxProps ={
-  showDelete:boolean,
-  setShowDelete:(a:boolean)=>void
-  handleDeletePosts:()=>void
-}
-const DeleteCheckBoxModal = ({showDelete, setShowDelete, handleDeletePosts}:DeleteCheckBoxProps) => {
+import { useContext } from 'react';
+import { PostContext } from './Context';
 
+type DeleteCheckBoxProps = {
+  showDelete: boolean;
+  setShowDelete: (a: boolean) => void;
+};
+const DeleteCheckBoxModal = ({
+  showDelete,
+  setShowDelete,
+}: DeleteCheckBoxProps) => {
+  const { posts, selectedPostIds, setPosts, setSelectedPostIds } =
+    useContext(PostContext);
+  const handleDeletePosts = () => {
+    const updatedPosts = posts.filter(
+      (post) => !selectedPostIds.includes(post.id)
+    );
+    setPosts(updatedPosts);
 
+    setShowDelete(true);
+    setSelectedPostIds([]);
+  };
 
   const handleConfirmDelete = () => {
     handleDeletePosts();
-    setShowDelete(false)
-    
-
+    setShowDelete(false);
   };
-  
-
- 
 
   return (
     <>
@@ -30,8 +36,7 @@ const DeleteCheckBoxModal = ({showDelete, setShowDelete, handleDeletePosts}:Dele
                 <h3 className='text-3xl font-semibold'>Delete Title</h3>
                 <button
                   className='p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
-                  onClick={()=>setShowDelete(false)}
-                >
+                  onClick={() => setShowDelete(false)}>
                   <span className='bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none'>
                     ×
                   </span>
@@ -48,22 +53,20 @@ const DeleteCheckBoxModal = ({showDelete, setShowDelete, handleDeletePosts}:Dele
                 <button
                   className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
                   type='button'
-                  onClick={()=>setShowDelete(false)}
-                >
+                  onClick={() => setShowDelete(false)}>
                   NO
                 </button>
                 <button
                   className='bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
                   type='button'
-                  onClick={handleConfirmDelete}
-                >
+                  onClick={handleConfirmDelete}>
                   YES
                 </button>
               </div>
             </div>
           </div>
         </div>
-      ):(
+      ) : (
         <div></div>
       )}
     </>

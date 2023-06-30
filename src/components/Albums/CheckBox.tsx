@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import { PostContext } from './Context';
-import Delete from './Delete';
-import Favorites from './Favorites';
+import { AlbumsProvider } from './Context';
 
 type CheckBoxProps = {
   Id: number;
@@ -9,7 +7,7 @@ type CheckBoxProps = {
 };
 
 const Checkbox = ({ Id, isChecked }: CheckBoxProps) => {
-  const { selectedPostIds, setSelectedPostIds } = useContext(PostContext);
+  const { selectedPostIds, setSelectedPostIds } = useContext(AlbumsProvider);
   const onChecked = (postId: number, checked: boolean) => {
     if (checked) {
       const post = [...selectedPostIds, postId];

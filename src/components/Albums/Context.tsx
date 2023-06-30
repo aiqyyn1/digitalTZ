@@ -1,13 +1,11 @@
 import { createContext } from 'react';
-import { PostType as Post, UserType as User } from '../../types/types';
-type Context = {
-  setShowModal: (show: boolean) => void;
-  showModal: boolean;
-  Id: number;
-  setPosts: [];
-  handleDeletePost: (postId: number) => Promise<void>;
-};
-type PostProps = {
+import {
+  PhotoType,
+  PostType as Post,
+  UserType as User,
+} from '../../types/types';
+
+type AlbumsProps = {
   posts: Post[];
   users: User[];
   error: Error | null;
@@ -20,6 +18,15 @@ type PostProps = {
   setPerPage: (a: number) => void;
   setSelectedPostIds: (a: number[]) => void;
   selectedPostIds: number[];
+  showImages: boolean;
+  setShowImage: (a: boolean) => void;
 };
-export const PostContext = createContext({} as PostProps);
+type Context = {
+  setShowModal: (show: boolean) => void;
+  showModal: boolean;
+  Id: number;
+  setPosts: [];
+  handleDeletePost: (postId: number) => Promise<void>;
+};
 export const MyContext = createContext({} as Context);
+export const AlbumsProvider = createContext({} as AlbumsProps);

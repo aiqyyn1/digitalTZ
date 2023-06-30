@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { PostContext } from './Context';
+import { AlbumsProvider } from './Context';
 type FavoriteCheckBoxProps = {
   showFavorite: boolean;
   setShowFavorite: (a: boolean) => void;
@@ -15,7 +15,7 @@ const FavoriteModel = ({
     setFavoriteIds,
     setPosts,
     setSelectedPostIds,
-  } = useContext(PostContext);
+  } = useContext(AlbumsProvider);
   const handleToggleFavorite = () => {
     const updatedPosts = posts.map((post) => {
       if (selectedPostIds.includes(post.id)) {

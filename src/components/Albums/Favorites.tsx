@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { PostContext } from './Context';
+import { AlbumsProvider } from './Context';
 import { Star } from 'tabler-icons-react';
+
 type FavoritesProps = {
   Id: number;
 };
@@ -13,7 +14,7 @@ const Favorites = ({ Id }: FavoritesProps) => {
     setFavoriteIds,
     selectedPostIds,
     setSelectedPostIds,
-  } = useContext(PostContext);
+  } = useContext(AlbumsProvider);
 
   const handleToggleFavorite = (postId: number) => {
     const isFavorite = favoriteIds.includes(postId);
@@ -38,7 +39,6 @@ const Favorites = ({ Id }: FavoritesProps) => {
   return (
     <div>
       <Star onClick={() => handleToggleFavorite(Id)}></Star>
- 
     </div>
   );
 };
